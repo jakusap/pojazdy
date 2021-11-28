@@ -49,11 +49,30 @@ class ServicePlanRepository {
         }
     }
 
+    void insertServiceEvent(String partnerUUID, ServiceEvent serviceEvent) {
+        try {
+            def params = setServiceEventInsertParams(partnerUUID, serviceEvent)
+            jdbcTemplate.update(Queries.INSERT_INTO_SERVICE_EVENTS, params)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
     void updateServicePlan(String partnerUUID, ServicePlan servicePlan) {
         try {
             def params = setInsertParams(partnerUUID, servicePlan)
             params.SERVICE_PLAN_ID = servicePlan.servicePlanId
             jdbcTemplate.update(Queries.UPDATE_SERVICE_PLAN, params)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
+    void updateServiceEvent(String partnerUUID, ServiceEvent serviceEvent) {
+        try {
+            def params = setServiceEventInsertParams(partnerUUID, serviceEvent)
+            params.ORDER_NO = serviceEvent.orderNumber
+            jdbcTemplate.update(Queries.UPDATE_SERVICE_EVENT, params)
         } catch (DataAccessException e) {
             throw new PojazdyException(e)
         }
@@ -72,8 +91,8 @@ class ServicePlanRepository {
     ServicePlan findSpecificServicePlanDetails(String partnerUUID, int servicePlanId) {
         try {
             def params = [
-                    PARTNER_UUID   : UUID.fromString(partnerUUID),
-                    PLAN_ID: servicePlanId
+                    PARTNER_UUID: UUID.fromString(partnerUUID),
+                    PLAN_ID     : servicePlanId
             ]
             def sqlQuery = Queries.SELECT_SERVICE_PLANS_FOR_PARTNER + Queries.BY_PLAN_ID
             jdbcTemplate.queryForObject(sqlQuery, params, servicePlanMapper)
@@ -129,6 +148,17 @@ class ServicePlanRepository {
         ] as Map<String, Object>
     }
 
+    private static Map<String, Object> setServiceEventInsertParams(String partnerUUID, ServiceEvent serviceEvent) {
+        [
+                PLAN_ID             : serviceEvent.planId,
+                MILEAGE             : serviceEvent.mileage,
+                NOTIFICATION_MILEAGE: serviceEvent.mileageNotification,
+                COMMENTS            : serviceEvent.comments,
+                PERIOD              : serviceEvent.period,
+                NOTIFICATION_PERIOD : serviceEvent.periodNotification
+        ] as Map<String, Object>
+    }
+
     private class ServicePlanMapper implements RowMapper<ServicePlan> {
 
         @Override
@@ -154,7 +184,7 @@ class ServicePlanRepository {
                     mileage: rs.getInt("MILEAGE"),
                     period: rs.getTimestamp("PERIOD"),
                     comments: rs.getString("COMMENTS"),
-                    mileageNotification: rs.getInt("NOTIFICATION_MILEADGE"),
+                    mileageNotification: rs.getInt("NOTIFICATION_MILEAGE"),
                     periodNotification: rs.getTimestamp("NOTIFICATION_PERIOD")
             )
             serviceEvent
@@ -179,7 +209,7 @@ class ServicePlanRepository {
                             mileage: rs.getInt("MILEAGE"),
                             period: rs.getTimestamp("PERIOD"),
                             comments: rs.getString("COMMENTS"),
-                            mileageNotification: rs.getInt("NOTIFICATION_MILEADGE"),
+                            mileageNotification: rs.getInt("NOTIFICATION_MILEAGE"),
                             periodNotification: rs.getTimestamp("NOTIFICATION_PERIOD")
                     )
 

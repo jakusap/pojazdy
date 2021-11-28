@@ -3,6 +3,7 @@ package com.example.pojazdy.service
 import com.example.pojazdy.exceptions.BadRequestException
 import com.example.pojazdy.model.ServicePlan
 import com.example.pojazdy.model.cars.Car
+import com.example.pojazdy.model.events.ServiceEvent
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEventList
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEvents
 
@@ -42,9 +43,19 @@ class ServicePlanService {
         servicePlanRepository.insert(partnerUUID, servicePlan)
     }
 
+    void addServiceEvent(ServiceEvent serviceEvent) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        servicePlanRepository.insertServiceEvent(partnerUUID, serviceEvent)
+    }
+
     void updateServicePlan(ServicePlan servicePlan) {
         def partnerUUID = loginService.loginPartnerUUID()
         servicePlanRepository.updateServicePlan(partnerUUID, servicePlan)
+    }
+
+    void updateServiceEvent(ServiceEvent serviceEvent) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        servicePlanRepository.updateServiceEvent(partnerUUID, serviceEvent)
     }
 
     ServicePlan findSpecificServicePlanDetails(int servicePlanId)

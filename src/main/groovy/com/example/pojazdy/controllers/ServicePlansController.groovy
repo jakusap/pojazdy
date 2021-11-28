@@ -2,6 +2,7 @@ package com.example.pojazdy.controllers
 
 import com.example.pojazdy.model.ServicePlan
 import com.example.pojazdy.model.cars.Car
+import com.example.pojazdy.model.events.ServiceEvent
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEventList
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEvents
 import com.example.pojazdy.service.ServicePlanService
@@ -45,7 +46,6 @@ class ServicePlansController {
 
     @PostMapping
     void addServicePlan(@RequestBody ServicePlan servicePlan) {
-        log.info("{}", servicePlan);
         servicePlanService.addServicePlan(servicePlan)
     }
 

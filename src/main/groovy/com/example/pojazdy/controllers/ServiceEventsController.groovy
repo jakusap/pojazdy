@@ -1,5 +1,7 @@
 package com.example.pojazdy.controllers
 
+import com.example.pojazdy.model.ServicePlan
+import com.example.pojazdy.model.events.ServiceEvent
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEvents
 import com.example.pojazdy.service.ServicePlanService
 import groovy.transform.CompileStatic
@@ -25,9 +27,15 @@ class ServiceEventsController {
         this.servicePlanService = servicePlanService
     }
 
-//    @GetMapping("/partner")
-//    List<PartnerServiceEvents> servicePlans() {
-//        servicePlanService.findServiceEventsForPartner()
-//    }
+    @PostMapping("insertEvent/{servicePlanId}")
+    void addServiceEvent(@PathVariable("servicePlanId") int servicePlanId, @RequestBody ServiceEvent serviceEvent) {
+        serviceEvent.planId = servicePlanId
+        servicePlanService.addServiceEvent(serviceEvent)
+    }
+
+    @PutMapping("/updateEvent/{orderNumber}")
+    void updateServicePlan(@PathVariable("orderNumber") int orderNumber, @RequestBody ServiceEvent serviceEvent) {
+        servicePlanService.updateServiceEvent(serviceEvent)
+    }
 
 }
