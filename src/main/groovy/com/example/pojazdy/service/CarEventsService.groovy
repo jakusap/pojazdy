@@ -18,25 +18,28 @@ import org.springframework.stereotype.Service
 @CompileStatic
 class CarEventsService {
     private final CarEventsRepository carEventsRepository
+    private final LoginService loginService
 
     @Autowired
-    CarEventsService(CarEventsRepository carEventsRepository) {
+    CarEventsService(CarEventsRepository carEventsRepository, LoginService loginService) {
         this.carEventsRepository = carEventsRepository
+        this.loginService = loginService
+
     }
 
     void addCarEvent(CarEvent carEvent) {
-        def partnerUUID = '2169d3f0-98ba-4f73-8f92-015effd24bdc'
+        def partnerUUID = loginService.loginPartnerUUID()
         carEventsRepository.insert(partnerUUID, carEvent)
     }
 
     void updateCarEvent(CarEvent carEvent) {
-        def partnerUUID = '2169d3f0-98ba-4f73-8f92-015effd24bdc'
+        def partnerUUID = loginService.loginPartnerUUID()
         carEventsRepository.updateCarEvent(partnerUUID, carEvent)
     }
 
-    List<CarEvent> findCarEventsForPartnerCar(Car car) {
-        def partnerUUID = '2169d3f0-98ba-4f73-8f92-015effd24bdc'
-        carEventsRepository.findCarEventsForPartnersCar(partnerUUID, car)
+    List<CarEvent> findCarEventsForPartnerCar(int carId) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        carEventsRepository.findCarEventsForPartnersCar(partnerUUID, carId)
     }
 }
 

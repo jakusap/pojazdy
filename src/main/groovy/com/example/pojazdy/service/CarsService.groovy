@@ -50,6 +50,17 @@ class CarsService {
         cars
     }
 
+    List<Car> servicePlanCars(int servicePlanId) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        def cars = carsRepository.findCarsForServicePlan(partnerUUID, servicePlanId)
+        cars
+    }
+
+    void removeCarFromServicePlan(int carId) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        carsRepository.removeCarForServicePlan(partnerUUID, carId)
+    }
+
     List<String> getCarsMake() {
         def carsMake = carsRepository.findAllCarsMake()
         carsMake

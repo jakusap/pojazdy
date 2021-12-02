@@ -35,7 +35,6 @@ class LoginService {
     Account loginAccount() {
         def loginAccount = ((KeycloakAuthenticationToken) SecurityContextHolder.context.authentication)
                 .account.keycloakSecurityContext.token
-        log.info("Role {}", parseRoleFromToken(loginAccount.realmAccess.roles))
         new Account(
                 acsId: loginAccount.subject,
                 email: loginAccount.email,

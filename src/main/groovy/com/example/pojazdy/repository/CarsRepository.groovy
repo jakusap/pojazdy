@@ -106,6 +106,32 @@ class CarsRepository {
         }
     }
 
+    List<Car> findCarsForServicePlan(String partnerUUID, int servicePlanId) {
+        try {
+            def params = [
+                    PARTNER_UUID   : UUID.fromString(partnerUUID),
+                    SERVICE_PLAN_ID: servicePlanId
+            ]
+            def sqlQuery = Queries.SELECT_CARS_FOR_SERVICE_PLAN
+            jdbcTemplate.query(sqlQuery, params, carMapper)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
+    void removeCarForServicePlan(String partnerUUID, int carId) {
+        try {
+            def params = [
+                    PARTNER_UUID: UUID.fromString(partnerUUID),
+                    CAR_ID      : carId
+            ]
+            def sqlQuery = Queries.UPDATE_CAR_SERVICE_PLAN
+            jdbcTemplate.update(sqlQuery, params)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
     List<String> findAllCarsMake() {
         try {
             def sqlQuery = Queries.SELECT_ALL_CARS_MAKE

@@ -9,8 +9,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore
  * */
 class EventTypes {
 
-    Partner partner
-
     String code
 
     String name

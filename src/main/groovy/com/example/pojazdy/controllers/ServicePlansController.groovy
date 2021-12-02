@@ -5,6 +5,7 @@ import com.example.pojazdy.model.cars.Car
 import com.example.pojazdy.model.events.ServiceEvent
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEventList
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEvents
+import com.example.pojazdy.service.CarsService
 import com.example.pojazdy.service.ServicePlanService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.*
 @CompileStatic
 @RequestMapping("/service_plans")
 class ServicePlansController {
-    private final  ServicePlanService servicePlanService
+    private final ServicePlanService servicePlanService
 
     @Autowired
     ServicePlansController(ServicePlanService servicePlanService) {
@@ -37,7 +38,6 @@ class ServicePlansController {
     ServicePlan getSpecificServicePlanDetails(@PathVariable("servicePlanId") int servicePlanId){
         servicePlanService.findSpecificServicePlanDetails(servicePlanId)
     }
-
 
     @GetMapping("/partnerServiceEvents")
     List<PartnerServiceEventList> partnerServiceEvents() {

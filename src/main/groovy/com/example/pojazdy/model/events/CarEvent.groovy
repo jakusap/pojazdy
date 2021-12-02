@@ -14,17 +14,21 @@ class CarEvent {
 
     int carId
 
+    String eventCodeName
+
     String eventCode
 
-    int planId
+    String planId
 
-    int orderNumber
+    String orderNumber
 
     TS dateTime
 
     int mileage
 
-    int carUserId
+    String carUserId
+
+    String driverName
 
     int cost
 

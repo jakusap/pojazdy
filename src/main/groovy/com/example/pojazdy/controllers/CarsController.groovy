@@ -1,5 +1,6 @@
 package com.example.pojazdy.controllers
 
+import com.example.pojazdy.model.ServicePlan
 import com.example.pojazdy.model.annotations.HasPartnerRole
 import com.example.pojazdy.service.CarsService
 import groovy.transform.CompileStatic
@@ -33,6 +34,16 @@ class CarsController {
     @GetMapping("/carMake")
     List<String> carMakes() {
         carsService.getCarsMake()
+    }
+
+    @GetMapping("/servicePlanCars/{servicePlanId}")
+    List<Car> getServicePlanCars(@PathVariable("servicePlanId") int servicePlanId){
+        carsService.servicePlanCars(servicePlanId)
+    }
+
+    @GetMapping("/removeServicePlanCars/{carId}")
+    void removeCarFromServicePlan(@PathVariable("carId") int carId){
+        carsService.removeCarFromServicePlan(carId)
     }
 
     @GetMapping("/carModel/{carMake}")

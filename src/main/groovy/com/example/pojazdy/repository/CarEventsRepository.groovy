@@ -54,11 +54,11 @@ class CarEventsRepository {
         }
     }
 
-    List<CarEvent> findCarEventsForPartnersCar(String partnerUUID, Car car) {
+    List<CarEvent> findCarEventsForPartnersCar(String partnerUUID, int carId) {
         try {
             def params = [
                     PARTNER_UUID: UUID.fromString(partnerUUID),
-                    CAR_ID: car.carId
+                    CAR_ID: carId
             ]
             def sqlQuery = Queries.SELECT_CAR_EVENTS_FOR_PARTNER_CAR
             jdbcTemplate.query(sqlQuery, params, carEventMapper)
@@ -76,7 +76,7 @@ class CarEventsRepository {
                 ORDER_NO           : carEvent.orderNumber,
                 DATETIME           : carEvent.dateTime,
                 MILEAGE            : carEvent.mileage,
-                USER_ID            : carEvent.carUserId,
+                USER_ID            : carEvent.carUserId as int,
                 COST               : carEvent.cost
         ] as Map<String, Object>
     }
@@ -88,12 +88,14 @@ class CarEventsRepository {
             def carEvent = new CarEvent(
                     carEventId: rs.getInt("ID"),
                     carId: rs.getInt("CAR_ID"),
+                    eventCodeName: rs.getString("NAME"),
                     eventCode: rs.getString("EVENT_CODE"),
                     planId: rs.getInt("PLAN_ID"),
-                    orderNumber: rs.getInt("ORDER_NUMBER"),
+                    orderNumber: rs.getInt("ORDER_NO"),
                     dateTime: rs.getTimestamp("DATETIME"),
                     mileage: rs.getInt("MILEAGE"),
                     carUserId: rs.getInt("USER_ID"),
+                    driverName: rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME"),
                     cost: rs.getInt("COST"),
             )
             carEvent

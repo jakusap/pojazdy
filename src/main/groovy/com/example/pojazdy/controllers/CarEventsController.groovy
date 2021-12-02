@@ -31,9 +31,9 @@ class CarEventsController {
         this.carEventsService = carEventsService
     }
 
-    @GetMapping
-    List<CarEvent> carEvents(@RequestBody Car car) {
-        carEventsService.findCarEventsForPartnerCar(car)
+    @GetMapping("/carList/{carId}")
+    List<CarEvent> carEvents(@PathVariable("carId") int carId) {
+        carEventsService.findCarEventsForPartnerCar(carId)
     }
 
     @PostMapping()
