@@ -1,6 +1,7 @@
 package com.example.pojazdy.service
 
 import com.example.pojazdy.exceptions.BadRequestException
+import com.example.pojazdy.model.ServicePlan
 import com.example.pojazdy.model.cars.*
 import com.example.pojazdy.repository.CarsRepository
 import com.example.pojazdy.repository.DriversRepository
@@ -54,6 +55,17 @@ class CarsService {
         def partnerUUID = loginService.loginPartnerUUID()
         def cars = carsRepository.findCarsForServicePlan(partnerUUID, servicePlanId)
         cars
+    }
+
+    List<Car> availableServicePlanCars(ServicePlan servicePlan) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        def cars = carsRepository.findAvailableCarsForServicePlan(partnerUUID, servicePlan)
+        cars
+    }
+
+    void addCarForServicePlan(int carId, int servicePlanId) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        carsRepository.addCarForServicePlan(partnerUUID, carId, servicePlanId)
     }
 
     void removeCarFromServicePlan(int carId) {

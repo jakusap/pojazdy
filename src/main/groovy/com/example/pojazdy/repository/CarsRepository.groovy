@@ -2,6 +2,7 @@ package com.example.pojazdy.repository
 
 import com.example.pojazdy.exceptions.PojazdyException
 import com.example.pojazdy.model.Driver
+import com.example.pojazdy.model.ServicePlan
 import com.example.pojazdy.model.cars.*
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
@@ -114,6 +115,41 @@ class CarsRepository {
             ]
             def sqlQuery = Queries.SELECT_CARS_FOR_SERVICE_PLAN
             jdbcTemplate.query(sqlQuery, params, carMapper)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
+    List<Car> findAvailableCarsForServicePlan(String partnerUUID, ServicePlan servicePlan) {
+        try {
+            def params = [
+                    PARTNER_UUID   : UUID.fromString(partnerUUID),
+                    SERVICE_PLAN_ID: servicePlan.servicePlanId,
+                    CAR_MAKE       : servicePlan.carMake,
+                    CAR_MODEL      : servicePlan.carModel,
+            ]
+            def sqlQuery = Queries.AVAILABLE_CARS_FOR_SERVICE_PLAN
+            if (servicePlan.carMake) {
+                sqlQuery += Queries.BY_CAR_MAKE
+            }
+            if (servicePlan.carModel) {
+                sqlQuery += Queries.BY_CAR_MODEL
+            }
+            jdbcTemplate.query(sqlQuery, params, carMapper)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
+    void addCarForServicePlan(String partnerUUID, int carId, int servicePlanId) {
+        try {
+            def params = [
+                    PARTNER_UUID   : UUID.fromString(partnerUUID),
+                    CAR_ID         : carId,
+                    SERVICE_PLAN_ID: servicePlanId
+            ]
+            def sqlQuery = Queries.ADD_CAR_TO_SERVICE_PLAN
+            jdbcTemplate.update(sqlQuery, params)
         } catch (DataAccessException e) {
             throw new PojazdyException(e)
         }

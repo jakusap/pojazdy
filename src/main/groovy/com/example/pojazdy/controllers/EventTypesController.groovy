@@ -32,6 +32,7 @@ class EventTypesController {
         eventTypesService.eventTypes()
     }
 
+    @HasPartnerRole
     @PostMapping
     void addEventType(@RequestBody EventTypes eventTypes) {
         eventTypesService.addEventTypes(eventTypes)

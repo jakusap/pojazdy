@@ -1,5 +1,6 @@
 package com.example.pojazdy.controllers
 
+import com.example.pojazdy.model.annotations.HasPartnerRole
 import com.example.pojazdy.model.cars.Car
 import com.example.pojazdy.model.events.CarEvent
 import com.example.pojazdy.service.CarEventsService
@@ -31,16 +32,19 @@ class CarEventsController {
         this.carEventsService = carEventsService
     }
 
+    @HasPartnerRole
     @GetMapping("/carList/{carId}")
     List<CarEvent> carEvents(@PathVariable("carId") int carId) {
         carEventsService.findCarEventsForPartnerCar(carId)
     }
 
+    @HasPartnerRole
     @PostMapping()
     void addCarEvent(@RequestBody CarEvent carEvent) {
         carEventsService.addCarEvent(carEvent)
     }
 
+    @HasPartnerRole
     @PutMapping("/update/{carEventId}")
     void updateCarEvent(@PathVariable("carEventId") int carEventId, @RequestBody CarEvent carEvent) {
         carEvent.carEventId = carEventId

@@ -64,6 +64,14 @@ abstract class Queries {
 
     static final String UPDATE_CAR_SERVICE_PLAN = """UPDATE SYSADM.CARS C SET SERVICE_PLAN_ID = NULL WHERE C.CAR_ID = :CAR_ID"""
 
+    static final String AVAILABLE_CARS_FOR_SERVICE_PLAN = """SELECT C.* FROM SYSADM.CARS C WHERE C.SERVICE_PLAN_ID IS NULL"""
+
+    static final String BY_CAR_MAKE = """ AND C.CAR_MAKE = :CAR_MAKE"""
+
+    static final String BY_CAR_MODEL = """ AND C.MODEL = :CAR_MODEL"""
+
+    static final String ADD_CAR_TO_SERVICE_PLAN = """UPDATE SYSADM.CARS C SET SERVICE_PLAN_ID = :SERVICE_PLAN_ID WHERE C.CAR_ID = :CAR_ID"""
+
     // Car Users
 
     static final String SELECT_CAR_DRIVERS = """SELECT CU.*, D.* 
@@ -94,6 +102,8 @@ abstract class Queries {
         AND SP.PARTNER_UUID = :PARTNER_UUID"""
 
     static final String BY_PLAN_ID = """ AND SP.ID = :PLAN_ID"""
+
+    static final String SELECT_SERVICE_PLANS_FOR_PARTNER_CAR = """SELECT SP.* FROM SYSADM.CARS C, SYSADM.SERVICE_PLAN SP WHERE C.SERVICE_PLAN_ID = SP.ID AND C.CAR_ID = :CAR_ID AND SP.PARTNER_UUID = :PARTNER_UUID"""
 
     static final String BY_CAR_MAKE_CAR_MODEL = """ AND SP.CAR_MAKE = :CAR_MAKE AND SP.MODEL = :CAR_MODEL"""
 

@@ -115,9 +115,9 @@ class ServicePlanRepository {
         try {
             def params = [
                     PARTNER_UUID: UUID.fromString(partnerUUID),
-                    PLAN_ID     : carId,
+                    CAR_ID     : carId,
             ]
-            def sqlQuery = Queries.SELECT_SERVICE_PLANS_FOR_PARTNER + Queries.BY_PLAN_ID
+            def sqlQuery = Queries.SELECT_SERVICE_PLANS_FOR_PARTNER_CAR
             jdbcTemplate.queryForObject(sqlQuery, params, servicePlanMapper)
         } catch (DataAccessException e) {
             throw new PojazdyException(e)

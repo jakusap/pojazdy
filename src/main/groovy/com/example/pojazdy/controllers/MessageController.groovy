@@ -28,6 +28,7 @@ class MessageController {
         this.loginService = loginService
     }
 
+    @HasPartnerRole
     @GetMapping
     String mainPage() {
         return "It is a main page"

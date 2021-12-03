@@ -77,7 +77,7 @@ class ServicePlanService {
         if (servicePlan) {
             servicePlan.serviceEvents = servicePlanRepository.findServiceEventsForSpecificPlan(servicePlan.servicePlanId)
         }
-
+        log.info("CarId:{}, ServicePlanId {}",carId, servicePlan.servicePlanId)
         servicePlan
     }
 
