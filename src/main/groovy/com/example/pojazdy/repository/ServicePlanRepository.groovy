@@ -78,6 +78,18 @@ class ServicePlanRepository {
         }
     }
 
+    void removeServiceEvent(int servicePlanId, int orderNumber) {
+        try {
+            def params = [
+                    PLAN_ID : servicePlanId,
+                    ORDER_NO: orderNumber
+            ]
+            jdbcTemplate.update(Queries.DELETE_SERVICE_EVENT, params)
+        } catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
     List<ServicePlan> findServicePlansForPartner(String partnerUUID) {
         try {
             def params = [PARTNER_UUID: UUID.fromString(partnerUUID)]
@@ -101,11 +113,14 @@ class ServicePlanRepository {
         }
     }
 
-    List<PartnerServiceEventList> findPartnerServicePlanEvents(String partnerUUID) {
+    List<ServiceEvent> findPartnerServicePlanEvents(String partnerUUID, int carId) {
         try {
-            def params = [PARTNER_UUID: UUID.fromString(partnerUUID)]
+            def params = [
+                    PARTNER_UUID: UUID.fromString(partnerUUID),
+                    CAR_ID      : carId
+            ]
             def sqlQuery = Queries.SELECT_SERVICE_PLANS_EVENTS_FOR_PARTNER
-            jdbcTemplate.query(sqlQuery, params, partnerServiceEventsMapper)
+            jdbcTemplate.query(sqlQuery, params, serviceEventMapper)
         } catch (DataAccessException e) {
             throw new PojazdyException(e)
         }
@@ -115,7 +130,7 @@ class ServicePlanRepository {
         try {
             def params = [
                     PARTNER_UUID: UUID.fromString(partnerUUID),
-                    CAR_ID     : carId,
+                    CAR_ID      : carId,
             ]
             def sqlQuery = Queries.SELECT_SERVICE_PLANS_FOR_PARTNER_CAR
             jdbcTemplate.queryForObject(sqlQuery, params, servicePlanMapper)
@@ -196,22 +211,19 @@ class ServicePlanRepository {
         @Override
         PartnerServiceEventList mapRow(ResultSet rs, int rowNum) throws SQLException {
             def partnerServiceEvents = new PartnerServiceEventList(
-                    servicePlan: new ServicePlan(
-                            servicePlanId: rs.getInt("ID"),
-                            carMake: rs.getString("CAR_MAKE"),
-                            carModel: rs.getString("MODEL"),
-                            servicePlanName: rs.getString("NAME"),
-                            isActive: rs.getBoolean("IS_ACTIVE")
-                    ),
-                    serviceEvent: new ServiceEvent(
-                            planId: rs.getInt("PLAN_ID"),
-                            orderNumber: rs.getInt("ORDER_NO"),
-                            mileage: rs.getInt("MILEAGE"),
-                            period: rs.getTimestamp("PERIOD"),
-                            comments: rs.getString("COMMENTS"),
-                            mileageNotification: rs.getInt("NOTIFICATION_MILEAGE"),
-                            periodNotification: rs.getTimestamp("NOTIFICATION_PERIOD")
-                    )
+//                    carId: rs.getString("CAR_ID"),
+//                    carMake: rs.getString("CAR_MAKE"),
+//                    carModel: rs.getString("MODEL"),
+//                    registrationNumber: rs.getString("REGISTRATION_NUMBER"),
+//                    serviceEvents: new ServiceEvent(
+//                            planId: rs.getInt("PLAN_ID"),
+//                            orderNumber: rs.getInt("ORDER_NO"),
+//                            mileage: rs.getInt("MILEAGE"),
+//                            period: rs.getTimestamp("PERIOD"),
+//                            comments: rs.getString("COMMENTS"),
+//                            mileageNotification: rs.getInt("NOTIFICATION_MILEAGE"),
+//                            periodNotification: rs.getTimestamp("NOTIFICATION_PERIOD")
+//                    )
 
             )
             partnerServiceEvents

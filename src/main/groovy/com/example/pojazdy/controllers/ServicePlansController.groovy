@@ -44,12 +44,6 @@ class ServicePlansController {
     }
 
     @HasPartnerRole
-    @GetMapping("/partnerServiceEvents")
-    List<PartnerServiceEventList> partnerServiceEvents() {
-        servicePlanService.findServiceEventsForPartner()
-    }
-
-    @HasPartnerRole
     @PostMapping
     void addServicePlan(@RequestBody ServicePlan servicePlan) {
         servicePlanService.addServicePlan(servicePlan)

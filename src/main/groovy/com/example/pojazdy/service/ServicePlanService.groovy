@@ -6,7 +6,7 @@ import com.example.pojazdy.model.cars.Car
 import com.example.pojazdy.model.events.ServiceEvent
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEventList
 import com.example.pojazdy.model.events.eventTypes.PartnerServiceEvents
-
+import com.example.pojazdy.repository.CarsRepository
 import com.example.pojazdy.repository.ServicePlanRepository
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -28,11 +28,13 @@ class ServicePlanService {
 
     private final ServicePlanRepository servicePlanRepository
     private final LoginService loginService
+    private final CarsRepository carsRepository
 
     @Autowired
-    ServicePlanService(ServicePlanRepository servicePlanRepository, LoginService loginService) {
+    ServicePlanService(ServicePlanRepository servicePlanRepository, LoginService loginService, CarsRepository carsRepository) {
         this.servicePlanRepository = servicePlanRepository
         this.loginService = loginService
+        this.carsRepository = carsRepository
     }
 
     void addServicePlan(ServicePlan servicePlan) {
@@ -77,15 +79,35 @@ class ServicePlanService {
         if (servicePlan) {
             servicePlan.serviceEvents = servicePlanRepository.findServiceEventsForSpecificPlan(servicePlan.servicePlanId)
         }
-        log.info("CarId:{}, ServicePlanId {}",carId, servicePlan.servicePlanId)
         servicePlan
     }
 
 
+    void updateServiceEventsForPartner(int servicePlanId, int orderNumber) {
+        if(servicePlanId > 0 && orderNumber > 0) {
+            servicePlanRepository.removeServiceEvent(servicePlanId, orderNumber)
+        }
+        else {
+            throw new BadRequestException("ServiceEvent is invalid!")
+        }
+    }
+
     List<PartnerServiceEventList> findServiceEventsForPartner() {
         def partnerUUID = loginService.loginPartnerUUID()
-        def partnerServicePlanEvents = servicePlanRepository.findPartnerServicePlanEvents(partnerUUID)
-        partnerServicePlanEvents
+        def events = new ArrayList<PartnerServiceEventList>()
+        def cars = carsRepository.findCarsForPartner(partnerUUID)
+        cars.each {
+            if (it.servicePlanId > 0) {
+                def event = new PartnerServiceEventList()
+                event.carId = it.carId
+                event.carMake = it.carMake
+                event.carModel = it.carModel
+                event.registrationNumber = it.registrationNumber
+                event.serviceEvents = servicePlanRepository.findPartnerServicePlanEvents(partnerUUID, it.carId)
+                events.add(event)
+            }
+        }
+        events
     }
 
 }
