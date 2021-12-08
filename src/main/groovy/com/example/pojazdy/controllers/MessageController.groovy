@@ -16,7 +16,7 @@ import groovy.util.logging.Slf4j
  * */
 @Slf4j
 @RestController
-@RequestMapping('/')
+@RequestMapping('/message')
 class MessageController {
 
     private final PartnersRepository partnersRepository

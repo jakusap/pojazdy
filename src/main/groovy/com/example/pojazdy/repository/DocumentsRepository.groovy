@@ -1,14 +1,12 @@
 package com.example.pojazdy.repository
 
-import com.example.pojazdy.model.Document
-import com.example.pojazdy.model.cars.Car
+import com.example.pojazdy.model.documents.Document
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Repository
 
-import javax.print.Doc
 import javax.sql.DataSource
 import java.sql.ResultSet
 import java.sql.SQLException
