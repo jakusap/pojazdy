@@ -38,11 +38,11 @@ class FilesController {
         this.storageService = storageService
     }
 
-    @HasPartnerRole
-    @PostMapping
-    ResponseEntity uploadFile( @RequestParam(name = "file") MultipartFile file){
-        String filename = file.getOriginalFilename()
-        def okej = storageService.storeFile(file)
-        ResponseEntity.ok("File uploaded")
-    }
+//    @HasPartnerRole
+//    @PostMapping
+//    ResponseEntity uploadFile( @RequestParam(name = "file") MultipartFile file){
+//        String filename = file.getOriginalFilename()
+//        def okej = storageService.storeFile(file)
+//        ResponseEntity.ok("File uploaded")
+//    }
 }

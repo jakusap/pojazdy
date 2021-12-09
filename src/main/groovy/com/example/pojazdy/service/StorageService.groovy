@@ -1,5 +1,6 @@
 package com.example.pojazdy.service
 
+import com.example.pojazdy.exceptions.PojazdyException
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
@@ -40,29 +41,32 @@ class StorageService {
 
     }
 
-    String storeFile(MultipartFile file) {
-        String fileName = StringUtils.cleanPath(file.getOriginalFilename())
+    Path getDocumentFilePath(String filePath) {
+        Path path = Paths.get(fileStoragePath as String, filePath)
 
+        path
+    }
+
+    void storeDocument(MultipartFile file, String documentId) {
         def partnerUUID = loginService.loginPartnerUUID()
 
+        String fileName = StringUtils.cleanPath(file.getOriginalFilename())
         Path partnerPath = Paths.get(fileStoragePath as String, partnerUUID)
-        Path filePath = Paths.get(partnerPath as String, fileName)
+        Path filePath = Paths.get(partnerPath as String, documentId + "-" + fileName)
+
         try {
             Files.createDirectories(partnerPath)
         }
         catch (Exception e) {
-            throw new IOException()
+            throw new PojazdyException(e)
         }
 
-        log.info("{} {}", filePath, fileStorageLocation)
         try {
             Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING)
         }
-        catch (IOException e) {
-            throw new RuntimeException()
+        catch (Exception e) {
+            throw new PojazdyException(e)
         }
-
-        fileName
     }
 
 }

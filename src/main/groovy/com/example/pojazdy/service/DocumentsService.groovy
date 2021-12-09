@@ -1,0 +1,46 @@
+package com.example.pojazdy.service
+
+
+import com.example.pojazdy.model.documents.Document
+import com.example.pojazdy.repository.DocumentsRepository
+import groovy.transform.CompileStatic
+import groovy.util.logging.Slf4j
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Service
+import org.springframework.web.multipart.MultipartFile
+
+import java.nio.file.Path
+import java.nio.file.Paths
+
+
+@Slf4j
+@Service
+@CompileStatic
+class DocumentsService {
+
+    private final DocumentsRepository documentsRepository
+    private final LoginService loginService
+    private final StorageService storageService
+
+    @Autowired
+    DocumentsService(DocumentsRepository documentsRepository, LoginService loginService, StorageService storageService) {
+        this.documentsRepository = documentsRepository
+        this.loginService = loginService
+        this.storageService = storageService
+    }
+
+    void uploadDocument(MultipartFile file, Document document) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        document.partnerUUID = partnerUUID
+        documentsRepository.insert(document)
+        def documentId = documentsRepository.getDocumentId(document)
+        storageService.storeDocument(file, documentId)
+    }
+
+    Document findDocument(int documentId) {
+        def partnerUUID = loginService.loginPartnerUUID()
+        def document = documentsRepository.findDocumentById(partnerUUID, documentId)
+        document.content = storageService.getDocumentFilePath(document.getPath())
+        document
+    }
+}
