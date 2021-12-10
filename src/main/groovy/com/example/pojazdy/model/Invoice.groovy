@@ -5,6 +5,7 @@ import groovy.util.logging.Slf4j
 import com.example.pojazdy.exceptions.PojazdyException
 
 import java.nio.file.Path
+import java.sql.Timestamp
 
 /**
  * Represents invoice image
@@ -12,13 +13,11 @@ import java.nio.file.Path
  * @author Jakub Sapiński
  */
 @Slf4j
-class InvoiceImage {
+class Invoice {
 
     String uuid
 
     String partnerUUID
-
-    String partnerCode
 
     String driverUUID
 
@@ -30,19 +29,19 @@ class InvoiceImage {
 
     String description
 
-    Date systemEntryDate
+    Timestamp systemEntryDate
 
-    Date deletedByDriverTimestamp
+    Timestamp deletedByDriverTimestamp
 
     @JsonIgnore
     Path content
 
     @JsonIgnore
     String getPath() {
-        if (!partnerCode || !driverUUID || !uuid) {
+        if (!partnerUUID || !uuid) {
             log.error("Can't generate path. At least one of required fields is null")
             throw new PojazdyException("Can't generate path. At least one of required fields is null")
         }
-        "${partnerCode}/driver_invoices/${driverUUID}/${uuid}".toString()
+        "${partnerUUID}/invoices/${uuid}".toString()
     }
 }

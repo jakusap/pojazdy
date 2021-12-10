@@ -47,12 +47,40 @@ class StorageService {
         path
     }
 
+    Path getInvoiceFilePath(String filePath) {
+        Path path = Paths.get(fileStoragePath as String, filePath)
+
+        path
+    }
+
     void storeDocument(MultipartFile file, String documentId) {
         def partnerUUID = loginService.loginPartnerUUID()
 
         String fileName = StringUtils.cleanPath(file.getOriginalFilename())
         Path partnerPath = Paths.get(fileStoragePath as String, partnerUUID)
         Path filePath = Paths.get(partnerPath as String, documentId + "-" + fileName)
+
+        try {
+            Files.createDirectories(partnerPath)
+        }
+        catch (Exception e) {
+            throw new PojazdyException(e)
+        }
+
+        try {
+            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING)
+        }
+        catch (Exception e) {
+            throw new PojazdyException(e)
+        }
+    }
+
+
+    void storeInvoice(MultipartFile file, String invoiceUUID) {
+        def partnerUUID = loginService.loginPartnerUUID()
+
+        Path partnerPath = Paths.get(fileStoragePath as String, partnerUUID, 'invoices')
+        Path filePath = Paths.get(partnerPath as String, invoiceUUID)
 
         try {
             Files.createDirectories(partnerPath)

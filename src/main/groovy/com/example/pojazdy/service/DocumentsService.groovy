@@ -9,10 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 
-import java.nio.file.Path
-import java.nio.file.Paths
-
-
+/**
+ *
+ * @author Jakub Sapiński
+ */
 @Slf4j
 @Service
 @CompileStatic
