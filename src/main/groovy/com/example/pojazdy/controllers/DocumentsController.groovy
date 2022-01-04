@@ -31,6 +31,12 @@ class DocumentsController {
     }
 
     @HasPartnerRole
+    @GetMapping
+    List<Document> getPartnerDocumentsList() {
+        documentsService.getPartnerDocuments()
+    }
+
+    @HasPartnerRole
     @PostMapping
     void uploadDocument(@RequestParam(name = "file") MultipartFile file,
                         @RequestParam(name = "typeCode") String typeCode,

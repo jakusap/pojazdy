@@ -29,6 +29,11 @@ class DocumentsService {
         this.storageService = storageService
     }
 
+    List<Document> getPartnerDocuments(){
+        def partnerUUID = loginService.loginPartnerUUID()
+        documentsRepository.findPartnerDocuments(partnerUUID)
+    }
+
     void uploadDocument(MultipartFile file, Document document) {
         def partnerUUID = loginService.loginPartnerUUID()
         document.partnerUUID = partnerUUID

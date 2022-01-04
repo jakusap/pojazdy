@@ -42,6 +42,19 @@ class DocumentsRepository {
         ] as Map<String, Object>
     }
 
+    List<Document> findPartnerDocuments(String partnerUUID) {
+        try {
+            def params = [
+                    PARTNER_UUID: UUID.fromString(partnerUUID),
+            ]
+            def sqlQuery = Queries.SELECT_PARTNER_DOCUMENTS
+            jdbcTemplate.query(sqlQuery, params, documentsMapper)
+        }
+        catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
     String getDocumentId(Document document) {
         try {
             def params = setInsertParams(document)

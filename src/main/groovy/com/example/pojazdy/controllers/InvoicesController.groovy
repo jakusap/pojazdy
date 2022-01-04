@@ -37,6 +37,12 @@ class InvoicesController {
     }
 
     @HasPartnerRole
+    @GetMapping
+    List<Invoice> getPartnerInvoicesList() {
+        invoiceService.getPartnerInvoices()
+    }
+
+    @HasPartnerRole
     @PostMapping
     void uploadDocument(@RequestParam(name = "file") MultipartFile file,
                         @RequestParam(name = "description") String description,

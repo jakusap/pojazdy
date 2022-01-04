@@ -34,7 +34,6 @@ class InvoiceRepository {
         this.invoicesMapper = new InvoicesMapper()
     }
 
-
     private static Map<String, Object> setInsertParams(Invoice invoice) {
         [
                 PARTNER_UUID     : UUID.fromString(invoice.partnerUUID),
@@ -43,6 +42,19 @@ class InvoiceRepository {
                 DESCRIPTION      : invoice.description,
                 SYSTEM_ENTRY_DATE: invoice.systemEntryDate
         ] as Map<String, Object>
+    }
+
+    List<Invoice> findPartnerInvoices(String partnerUUID) {
+        try {
+            def params = [
+                    PARTNER_UUID: UUID.fromString(partnerUUID)
+            ]
+            def sqlQuery = Queries.SELECT_PARTNER_INVOICES
+            jdbcTemplate.query(sqlQuery, params, invoicesMapper)
+        }
+        catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
     }
 
     String insert(Invoice invoice) {

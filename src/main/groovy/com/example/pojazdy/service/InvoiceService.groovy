@@ -32,6 +32,10 @@ class InvoiceService {
         this.driversRepository = driversRepository
     }
 
+    List<Invoice> getPartnerInvoices() {
+        def partnerUUID = loginService.loginPartnerUUID()
+        invoiceRepository.findPartnerInvoices(partnerUUID)
+    }
 
     void uploadInvoice(MultipartFile file, Invoice invoice) {
         def partnerUUID = loginService.loginPartnerUUID()
