@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.stereotype.Component
 import com.example.pojazdy.model.accounts.Account
 import com.example.pojazdy.model.accounts.AuthRole
+import com.example.pojazdy.model.Partner
 import com.example.pojazdy.repository.PartnersRepository
 
 /**
@@ -29,7 +30,20 @@ class LoginService {
     }
 
     String loginPartnerUUID() {
-        partnersRepository.findPartnerByAcsId(loginAccount().acsId)?.uuid
+        def uuid = partnersRepository.findPartnerByAcsId(loginAccount().acsId)?.uuid
+        if (uuid == null)
+        {
+            uuid = addPartner()
+        }
+        uuid
+
+    }
+
+    String addPartner() {
+        def partner = new Partner()
+        partner.acsId = loginAccount().acsId
+        partner.name = loginAccount().email
+        def uuid = partnersRepository.add(partner)
     }
 
     Account loginAccount() {
@@ -43,9 +57,6 @@ class LoginService {
         )
     }
 
-    boolean userIsPartner() {
-        return loginAccount().authRole == AuthRole.PARTNER
-    }
 
     private static AuthRole parseRoleFromToken(Set<String> roles) {
         if(!roles){

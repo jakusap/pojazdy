@@ -80,7 +80,7 @@ class PartnersRepository {
         [
                 PARTNER_UUID                : UUID.fromString(partner.uuid),
                 NAME                        : partner.name,
-                EMAIL                       : partner.email,
+                EMAIL                       : partner.name,
                 PHONE_NUMBER                : partner.phoneNumber,
         ] as Map<String, Object>
     }
