@@ -4,6 +4,7 @@ import com.example.pojazdy.exceptions.PojazdyException
 import com.example.pojazdy.model.Driver
 import com.example.pojazdy.model.Invoice
 import com.example.pojazdy.model.documents.Document
+import com.example.pojazdy.model.eventsFiles.EventFile
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
@@ -67,6 +68,20 @@ class InvoiceRepository {
             throw new PojazdyException(e)
         }
         invoice.uuid
+    }
+
+    void registerInvoiceForEvent(EventFile eventFile) {
+        try {
+            def params = [
+                    EVENT_ID: eventFile.eventId,
+                    FILE_ID : eventFile.fileId,
+                    INVOICE_UUID: UUID.fromString(eventFile.fileUUID)
+            ]
+            jdbcTemplate.update(Queries.INSERT_INTO_CAR_EVENTS_INVOICES, params)
+        }
+        catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
     }
 
     Invoice findInvoiceByUUID(String partnerUUID, String invoiceUUID) {

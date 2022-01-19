@@ -37,19 +37,18 @@ class DocumentsController {
     }
 
     @HasPartnerRole
-    @PostMapping
+    @PostMapping("/{eventId}")
     void uploadDocument(@RequestParam(name = "file") MultipartFile file,
-                        @RequestParam(name = "typeCode") String typeCode,
-                        @RequestParam(name = "description") String description,
-                        @RequestParam(name = "driverUUID") String driverUUID) {
+                        @RequestParam(name = "driverUUID") String driverUUID,
+                        @PathVariable("eventId") int eventId) {
 
         Document document = new Document()
-        document.typeCode = typeCode
+        document.typeCode = "DOKUMENT"
         document.driverUUID = driverUUID
         document.filename = file.getOriginalFilename()
-        document.description = description
+        document.description = file.getOriginalFilename().substring(0, file.getOriginalFilename().length() - 4)
         document.systemEntryDate = new Timestamp(System.currentTimeMillis())
-        documentsService.uploadDocument(file, document)
+        documentsService.uploadDocument(file, document, eventId)
     }
 
     @HasPartnerRole

@@ -2,6 +2,7 @@ package com.example.pojazdy.repository
 
 import com.example.pojazdy.exceptions.PojazdyException
 import com.example.pojazdy.model.documents.Document
+import com.example.pojazdy.model.eventsFiles.EventFile
 import groovy.transform.CompileStatic
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.dao.DataAccessException
@@ -66,10 +67,37 @@ class DocumentsRepository {
         }
     }
 
+    void insertDocumentFileType(String partnerUUID, String typeCode) {
+        try {
+            def params = [
+                    PARTNER_UUID: UUID.fromString(partnerUUID),
+                    CODE: typeCode,
+            ]
+            jdbcTemplate.update(Queries.INSERT_INTO_DOCUMENT_FILE_TYPES, params)
+        }
+        catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
     void insert(Document document) {
         try {
             def params = setInsertParams(document)
             jdbcTemplate.update(Queries.INSERT_INTO_DOCUMENTS, params)
+        }
+        catch (DataAccessException e) {
+            throw new PojazdyException(e)
+        }
+    }
+
+    void registerDocumentForEvent(EventFile eventFile) {
+        try {
+            def params = [
+                    EVENT_ID: eventFile.eventId,
+                    FILE_ID : eventFile.fileId,
+                    INVOICE_UUID: eventFile.fileUUID
+            ]
+            jdbcTemplate.update(Queries.INSERT_INTO_CAR_EVENTS_DOCUMENTS, params)
         }
         catch (DataAccessException e) {
             throw new PojazdyException(e)

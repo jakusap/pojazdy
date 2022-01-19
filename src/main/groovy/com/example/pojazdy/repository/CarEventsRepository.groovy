@@ -96,6 +96,7 @@ class CarEventsRepository {
                     mileage: rs.getInt("MILEAGE"),
                     carUserId: rs.getInt("USER_ID"),
                     driverName: rs.getString("FIRST_NAME") + " " + rs.getString("LAST_NAME"),
+                    driverUUID: rs.getString("DRIVER_UUID"),
                     cost: rs.getInt("COST"),
             )
             carEvent

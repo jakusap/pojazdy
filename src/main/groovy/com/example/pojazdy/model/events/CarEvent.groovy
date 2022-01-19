@@ -30,6 +30,8 @@ class CarEvent {
 
     String driverName
 
+    String driverUUID
+
     int cost
 
 

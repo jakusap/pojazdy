@@ -9,6 +9,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import com.example.pojazdy.model.eventsFiles.EventFile
 
 /**
  *
@@ -37,7 +38,7 @@ class InvoiceService {
         invoiceRepository.findPartnerInvoices(partnerUUID)
     }
 
-    void uploadInvoice(MultipartFile file, Invoice invoice) {
+    void uploadInvoice(MultipartFile file, Invoice invoice, int eventId) {
         def partnerUUID = loginService.loginPartnerUUID()
         def driver = driversRepository.findDriverByDriverUUID(partnerUUID, invoice.driverUUID)
 
@@ -47,6 +48,10 @@ class InvoiceService {
 
         def invoiceUUID = invoiceRepository.insert(invoice)
         storageService.storeInvoice(file, invoiceUUID)
+        def eventFile = new EventFile()
+        eventFile.eventId = eventId
+        eventFile.fileUUID= invoiceUUID
+        invoiceRepository.registerInvoiceForEvent(eventFile)
     }
 
     Invoice findInvoice(String invoiceUUID) {

@@ -8,6 +8,7 @@ import groovy.util.logging.Slf4j
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
+import com.example.pojazdy.model.eventsFiles.EventFile
 
 /**
  *
@@ -34,12 +35,17 @@ class DocumentsService {
         documentsRepository.findPartnerDocuments(partnerUUID)
     }
 
-    void uploadDocument(MultipartFile file, Document document) {
+    void uploadDocument(MultipartFile file, Document document, int eventId) {
         def partnerUUID = loginService.loginPartnerUUID()
         document.partnerUUID = partnerUUID
+        documentsRepository.insertDocumentFileType(document.partnerUUID, document.typeCode)
         documentsRepository.insert(document)
         def documentId = documentsRepository.getDocumentId(document)
         storageService.storeDocument(file, documentId)
+        def eventFile = new EventFile()
+        eventFile.eventId = eventId
+        eventFile.fileId = documentId as int
+        documentsRepository.registerDocumentForEvent(eventFile)
     }
 
     Document findDocument(int documentId) {

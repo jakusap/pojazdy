@@ -14,11 +14,11 @@ class ServiceEvent {
 
     int mileage
 
-    Timestamp period
+    Date period
 
     String comments
 
     int mileageNotification
 
-    Timestamp periodNotification
+    Date periodNotification
 }

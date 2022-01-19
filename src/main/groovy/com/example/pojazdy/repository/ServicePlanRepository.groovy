@@ -152,7 +152,6 @@ class ServicePlanRepository {
 
     }
 
-
     private static Map<String, Object> setInsertParams(String partnerUUID, ServicePlan servicePlan) {
         [
                 PARTNER_UUID: UUID.fromString(partnerUUID),
@@ -197,10 +196,10 @@ class ServicePlanRepository {
                     planId: rs.getInt("PLAN_ID"),
                     orderNumber: rs.getInt("ORDER_NO"),
                     mileage: rs.getInt("MILEAGE"),
-                    period: rs.getTimestamp("PERIOD"),
+                    period: rs.getDate("PERIOD"),
                     comments: rs.getString("COMMENTS"),
                     mileageNotification: rs.getInt("NOTIFICATION_MILEAGE"),
-                    periodNotification: rs.getTimestamp("NOTIFICATION_PERIOD")
+                    periodNotification: rs.getDate("NOTIFICATION_PERIOD")
             )
             serviceEvent
         }

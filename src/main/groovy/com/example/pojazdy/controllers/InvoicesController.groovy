@@ -43,18 +43,18 @@ class InvoicesController {
     }
 
     @HasPartnerRole
-    @PostMapping
+    @PostMapping("/{eventId}")
     void uploadDocument(@RequestParam(name = "file") MultipartFile file,
-                        @RequestParam(name = "description") String description,
-                        @RequestParam(name = "driverUUID") String driverUUID) {
+                        @RequestParam(name = "driverUUID") String driverUUID,
+                        @PathVariable("eventId") int eventId) {
 
         Invoice invoice = new Invoice()
         invoice.driverUUID = driverUUID
         invoice.filename = file.getOriginalFilename()
-        invoice.description = description
+        invoice.description = file.getOriginalFilename().substring(0, file.getOriginalFilename().length() - 4)
         invoice.systemEntryDate = new Timestamp(System.currentTimeMillis())
 
-        invoiceService.uploadInvoice(file, invoice)
+        invoiceService.uploadInvoice(file, invoice, eventId)
     }
 
     @HasPartnerRole
