@@ -76,7 +76,6 @@ class DocumentsRepository {
             jdbcTemplate.update(Queries.INSERT_INTO_DOCUMENT_FILE_TYPES, params)
         }
         catch (DataAccessException e) {
-            throw new PojazdyException(e)
         }
     }
 
